@@ -989,24 +989,24 @@ void MtxConvSlave::Process(int filt_part_idx)
 				// this is the SSE convolution version
 				for (int k=0; k<partitionsize_; k+=4)
 				{
-					const __m128 ra = _mm_load_ps(&a_re[k]);
-					const __m128 rb = _mm_load_ps(&b_re[k]);
-					const __m128 ia = _mm_load_ps(&a_im[k]);
-					const __m128 ib = _mm_load_ps(&b_im[k]);
+					const float32x4_t ra = vld1q_f32(&a_re[k]);
+					const float32x4_t rb = vld1q_f32(&b_re[k]);
+					const float32x4_t ia = vld1q_f32(&a_im[k]);
+					const float32x4_t ib = vld1q_f32(&b_im[k]);
                         
 					// destination
-					__m128 rc = _mm_load_ps(&c_re[k]);
-					__m128 ic = _mm_load_ps(&c_im[k]);
+                    float32x4_t rc = vld1q_f32(&c_re[k]);
+                    float32x4_t ic = vld1q_f32(&c_im[k]);
                         
 					// real part: real = ra*rb-ia*ib
-					rc = _mm_add_ps(rc, _mm_mul_ps(ra, rb));
-					rc = _mm_sub_ps(rc, _mm_mul_ps(ia, ib));
-					_mm_store_ps(&c_re[k], rc);
+					rc = vaddq_f32(rc, vmulq_f32(ra, rb));
+					rc = vsubq_f32(rc, vmulq_f32(ia, ib));
+                    vst1q_f32(&c_re[k], rc);
                         
 					// imag part: imag = ra*ib + ia*rb
-					ic = _mm_add_ps(ic, _mm_mul_ps(ra, ib));
-					ic = _mm_add_ps(ic, _mm_mul_ps(ia, rb));
-					_mm_store_ps(&c_im[k], ic);
+					ic = vaddq_f32(ic, vmulq_f32(ra, ib));
+					ic = vaddq_f32(ic, vmulq_f32(ia, rb));
+                    vst1q_f32(&c_im[k], ic);
 				}
 				// handle last bin separately
 				c_re[partitionsize_] += a_re[partitionsize_] * b_re[partitionsize_];

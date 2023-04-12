@@ -18,6 +18,9 @@ cmake_minimum_required(VERSION 3.15)
 #version and name
 file(READ VERSION VERSION)
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version")
+set(CMAKE_OSX_ARCHITECTURES="arm64;x86_64")
+
 project(x-mcfx_plugin_suite VERSION ${VERSION})
 
 add_definitions(-DVERSION=${VERSION}) #?? FOR THE DELAY

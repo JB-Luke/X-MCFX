@@ -35,13 +35,14 @@
 #endif
 
 
-// #if JUCE_USE_SSE_INTRINSICS
+//#if JUCE_USE_SSE_INTRINSICS
 #if JUCE_WINDOWS
     #include <intrin.h>
 #else
-    #include <x86intrin.h>
+    //#include <x86intrin.h>
+    #include <arm_neon.h>
 #endif
-// #endif
+//#endif
 
 #define GARDNER_SCHEME 1
 
